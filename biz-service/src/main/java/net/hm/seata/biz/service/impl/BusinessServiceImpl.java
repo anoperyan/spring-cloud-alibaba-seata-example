@@ -29,11 +29,11 @@ public class BusinessServiceImpl implements IBusinessService {
         storageDTO.setCommodityCode(commodityCode);
         storageDTO.setCount(orderCount);
         R<Void> storageR = storageService.deduct(storageDTO);
-        try {
-            Thread.sleep(5000);
-        }catch (Exception e) {
-            // do nothing
-        }
+        //try {
+        //    Thread.sleep(5000);
+        //}catch (Exception e) {
+        //    // do nothing
+        //}
         if (RespCode.OK.code != storageR.getCode()) {
             throw new RuntimeException("提交库存失败！");
         }

@@ -13,7 +13,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan("net.hm.seata.biz.mapper")
 public class BusinessApp {
     public static void main(String[] args) {
         SpringApplication.run(BusinessApp.class, args);

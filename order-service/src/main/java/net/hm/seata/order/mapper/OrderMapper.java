@@ -1,7 +1,7 @@
 package net.hm.seata.order.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import lab.anoper.dog.ec.order.entity.Order;
+import net.hm.seata.order.entity.Order;
 
 /**
  * @author Yan Jiahong

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Yan Jiahong
  * Created on 2021/06/09
  */
-@FeignClient(name = "dog-ecommerce-storage")
+@FeignClient(name = "storage-service")
 public interface RemoteStorageService {
     @PostMapping("/api/storage/deduct")
     R<Void> deduct(@RequestBody Storage dto);

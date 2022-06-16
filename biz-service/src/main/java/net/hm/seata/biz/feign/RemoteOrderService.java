@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @author Yan Jiahong
  * Created on 2021/06/09
  */
-@FeignClient(name = "dog-ecommerce-order")
+@FeignClient(name = "order-service")
 public interface RemoteOrderService {
     @PostMapping("/api/order/create")
     R<Order> create(@RequestBody Order dto);

@@ -13,7 +13,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@MapperScan("net.hm.seata.order.mapper")
+@MapperScan("net.hm.seata.storage.mapper")
 public class StorageApp {
     public static void main(String[] args) {
         SpringApplication.run(StorageApp.class, args);
