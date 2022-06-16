@@ -414,3 +414,128 @@ FOREIGN_KEY_CHECKS = 1;
 启动完成之后可以在Nacos的服务列表中，看到名为`seata-server`的服务。
 
 ## 3.创建客户端应用并配置应用
+
+示例项目Github主页：
+[spring-cloud-alibaba-seata-example](https://github.com/anoperyan/spring-cloud-alibaba-seata-example)
+
+3.1 每个微服务项目本地配置
+
+```yaml
+server:
+  port: 9006
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        # nacos服务注册地址
+        server-addr: ${NOCAS_HOST:localhost}:${NACOS_PORT:8848}
+      config:
+        # nacos数据配置地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+  config:
+    import:
+      # 导入所有微服务应用的通用配置
+      - nacos:application-@profiles.active@.yml
+      # 导入当前应用的当前环境的配置
+      - nacos:${spring.application.name}-@profiles.active@.yml
+```
+
+3.2 所有微服务的通用配置（配置在Nacos的`application-dev.yml`文件）
+
+```yaml
+spring:
+  datasource:
+    # 请自行建立一个dog_test数据，里面不需要任何表
+    url: jdbc:mysql://localhsost:3306/dog_test?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      initial-size: 5 #连接池初始化大小9004
+      min-idle: 1 #最小空闲连接数
+      max-active: 5 #最大连接数
+      max-wait: 2000 # 获取连接等待超时的时间
+  thymeleaf:
+    cache: false
+    mode: HTML5
+    suffix: .html
+    prefix: classpath:/static/
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+  mvc:
+    throw-exception-if-no-handler-found: true  #  出现错误时, 直接抛出异常
+  # 默认的时间格式
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    jedis:
+      pool:
+        max-active: 10
+        max-idle: 2
+        min-idle: 1
+logging:
+  level:
+    org.springframework.*: debug
+    net.hm.exam.*: debug
+    org.ibatis.*: debug
+
+# seata通用配置
+# 当前服务需要这些信息去读取seata服务器的某些配置信息
+seata:
+  # 默认启动（将这两个配置关闭后，将不使用分布式事务）
+  enabled: true
+  # 默认启动（将这两个配置关闭后，将不使用分布式事务）
+  enable-auto-data-source-proxy: true
+  registry:
+    # Seata服务注册方式为Nacos
+    type: nacos
+    # Seata服务器服务在Nacos的注册地址和分组信息
+    nacos:
+      server-addr: localhost:8848
+      group: DEFAULT_GROUP
+  config:
+    # Seata服务器服务的配置方式为Nacos
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      group: DEFAULT_GROUP
+      # Seata服务器服务的配置信息文件的data-id
+      data-id: seata-server.properties
+  # 当前的分布式服务的逻辑分组
+  tx-service-group: default_tx_group
+  application-id: ${spring.application.name}
+```
+
+3.3 各个微服务的各自配置数据（Nacos端）
+`account-service-dev.yml`文件：
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dog_ec_account?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+```
+
+`order-service-dev.yml`文件：
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dog_ec_order?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+```
+
+`storage-service-dev.yml`文件：
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dog_ec_storage?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+```
